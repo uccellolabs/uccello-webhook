@@ -1,0 +1,39 @@
+{
+    "name": "uccello/webhook",
+    "description": "A module to manage easily webhooks in a Uccello application.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jonathan SARDO",
+            "email": "jonathan@uccellolabs.com"
+        }
+    ],
+    "require": {
+        "uccello/uccello": "^1.0|^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Uccello\\Webhook\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Uccello\\Webhook\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Uccello\\Webhook\\Providers\\AppServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
