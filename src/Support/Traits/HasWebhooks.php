@@ -92,6 +92,10 @@ trait HasWebhooks
      */
     protected function getWebhooksToCall($event)
     {
+        if (!$this->module) {
+            return [];
+        }
+
         // Get all compatible webhooks
         $query = Webhook::where('rel_module_id', $this->module->id)
                 ->where('event', $event);
