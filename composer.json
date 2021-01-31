@@ -17,11 +17,6 @@
             "Uccello\\Webhook\\": "src/"
         }
     },
-    "autoload-dev": {
-        "psr-4": {
-            "Uccello\\Webhook\\Tests\\": "tests/"
-        }
-    },
     "extra": {
         "laravel": {
             "providers": [
