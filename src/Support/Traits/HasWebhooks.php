@@ -74,6 +74,10 @@ trait HasWebhooks
      */
     public function callWebhooks($event)
     {
+        if (!$this->webhooksTableExists()) {
+            return;
+        }
+
         $webhooks = $this->getWebhooksToCall($event);
 
         foreach ($webhooks as $webhook) {
@@ -81,6 +85,11 @@ trait HasWebhooks
                 $this->callWebhookUrl($webhook);
             }
         }
+    }
+
+    protected function webhooksTableExists()
+    {
+        return Schema::hasTable((new Webhook)->table);
     }
 
     /**
