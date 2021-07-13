@@ -60,9 +60,11 @@ trait HasWebhooks
         });
 
         // Restored
-        static::restored(function ($model) {
-            $model->callWebhooks(self::$restoredEvent);
-        });
+        if (method_exists(new static, 'restore')) {
+            static::restored(function ($model) {
+                $model->callWebhooks(self::$restoredEvent);
+            });
+        }
     }
 
     /**
@@ -142,12 +144,47 @@ trait HasWebhooks
         try {
             $client = new Client();
             $response = $client->request('POST', $webhook->url, [
-                'json' => $this->toJson()
+                'json' => $this->getFormattedDataToDisplay()
             ]);
         } catch (\Exception $e) {
             Log::info($e->getMessage());
         }
 
         return $response;
+    }
+
+    /**
+     * Adds formatted record's data to display
+     *
+     * @param mixed $record
+     * @return mixed
+     */
+    protected function getFormattedDataToDisplay()
+    {
+        if (empty($this->module)) {
+            return $this->toJson();
+        }
+
+        $module = $this->module;
+
+        $record = clone $this;
+
+        foreach ($module->fields as $field) {
+            $uitype = uitype($field->uitype_id);
+
+            // If field name is not defined, it could be because the coloumn name is different.
+            // Adds field name as a key of the record
+            if ($uitype->name !== 'entity' && !$record->getAttributeValue($field->name) && $field->column !== $field->name) {
+                $record->setAttribute($field->name, $record->getAttributeValue($field->column));
+            }
+
+            // If a special template exists, add it.
+            $formattedValue = $uitype->getFormattedValueToDisplay($field, $record);
+            if ($formattedValue && $formattedValue !== $record->getAttributeValue($field->name)) {
+                $record->setAttribute($field->name.'_formatted', $formattedValue);
+            }
+        }
+
+        return $record->toJson();
     }
 }
