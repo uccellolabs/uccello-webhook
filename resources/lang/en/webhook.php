@@ -11,7 +11,6 @@ return [
     ],
     'field' => [
         'rel_module' => 'Module',
-        'tenant' => 'Tenant',
         'url' => 'URL',
         'event' => 'Événement',
         'created_at' => 'Created at',

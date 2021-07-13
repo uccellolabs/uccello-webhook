@@ -45,7 +45,6 @@ class CreateWebhookModule extends Migration
         Schema::create($this->tablePrefix . 'webhooks', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('rel_module_id');
-            $table->uuid('tenant_id');
             $table->string('url');
             $table->string('event');
             $table->unsignedInteger('domain_id');
@@ -106,17 +105,6 @@ class CreateWebhookModule extends Migration
             'displaytype_id' => displaytype('everywhere')->id,
             'sequence' => $block->fields()->count(),
             'data' => json_decode('{"rules":"required","crud":true}')
-        ]);
-
-        // Field tenant
-        Field::create([
-            'module_id' => $module->id,
-            'block_id' => $block->id,
-            'name' => 'tenant',
-            'uitype_id' => uitype('entity')->id,
-            'displaytype_id' => displaytype('everywhere')->id,
-            'sequence' => $block->fields()->count(),
-            'data' => json_decode('{"rules":"required","module":"user"}')
         ]);
 
         // Field url
@@ -194,7 +182,7 @@ class CreateWebhookModule extends Migration
             'user_id' => null,
             'name' => 'filter.all',
             'type' => 'list',
-            'columns' => [ 'rel_module', 'tenant', 'url', 'event' ],
+            'columns' => [ 'rel_module', 'url', 'event' ],
             'conditions' => null,
             'order' => null,
             'is_default' => true,
