@@ -185,6 +185,11 @@ trait HasWebhooks
             }
         }
 
+        // Had systematicaly deleted_at for record using soft delete
+        if (!$record->getAttributeValue('deleted_at') && Schema::hasColumn($this->getTable(), 'deleted_at')) {
+            $record->deleted_at = null;
+        }
+
         return $record->toJson();
     }
 }
